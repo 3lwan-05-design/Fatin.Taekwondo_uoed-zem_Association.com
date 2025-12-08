@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FATIN TKD OZ - Elite Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rajdhani:wght@400;600;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Rajdhani', 'Cairo', 'sans-serif'],
+                        display: ['Black Ops One', 'Cairo', 'cursive'], 
+                    },
+                    colors: {
+                        neonRed: '#FF003C',
+                        neonBlue: '#00F0FF',
+                        neonGold: '#FFD700',
+                        darkBg: '#050505',
+                        panelBg: '#111111',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 3s linear infinite',
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- GLOBAL & NEON EFFECTS --- */
+        body {
+            background-color: #050505;
+            color: #fff;
+            overflow-x: hidden;
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, #ffffff05 1px, transparent 1px),
+                              linear-gradient(to bottom, #ffffff05 1px, transparent 1px);
+        }
+
+        /* --- PRELOADER (UIVERSE STYLE) --- */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.s ease-out;
+        }
+        
+        .loader-ring {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: #FF003C;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+        .loader-ring::before, .loader-ring::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            border: 4px solid transparent;
+        }
+        .loader-ring::before {
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border-top-color: #00F0FF;
+            animation: spin 2s linear infinite reverse;
+        }
+        .loader-ring::after {
+            top: 25px; left: 25px; right: 25px; bottom: 25px;
+            border-top-color: #FFD700;
+            animation: spin 3s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-text {
+            margin-top: 20px;
+            font-family: 'Black Ops One', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            color: white;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        /* --- GLITCH BUTTON --- */
+        .btn-glitch {
+            font-family: 'Black Ops One', 'Cairo', cursive;
+            font-size: 1.2rem;
+            padding: 15px 40px;
+            border: 2px solid #FF003C;
+            background: transparent;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: 0.2s;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .btn-glitch:hover {
+            background: #FF003C;
+            color: #000;
+            box-shadow: 0 0 30px #FF003C;
+            text-shadow: none;
+        }
+        
+        /* Gold Button Variation */
+        .btn-glitch.gold {
+            border-color: #FFD700;
+            color: #FFD700;
+        }
+        .btn-glitch.gold:hover {
+            background: #FFD700;
+            color: #000;
+            box-shadow: 0 0 30px #FFD700;
+        }
+
+        /* --- FIGHTER CARDS --- */
+        .fighter-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transition: 0.4s ease;
+        }
+
+        .fighter-card:hover {
+            border-color: #00F0FF;
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+        }
+
+        .fighter-stats {
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(5px);
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            transition: 0.4s ease;
+            border-top: 2px solid #00F0FF;
+        }
+
+        .fighter-card:hover .fighter-stats {
+            bottom: 0;
+        }
+
+        /* Stat Bars */
+        .stat-bar {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00F0FF, #FF003C);
+            width: 0%;
+            transition: width 1s ease 0.2s;
+        }
+        .fighter-card:hover .stat-fill {
+            width: var(--w);
+        }
+
+        /* --- PRICE CARDS --- */
+        .price-card {
+            background: #0f0f0f;
+            border: 1px solid #222;
+            padding: 2rem;
+            position: relative;
+            transition: 0.3s;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+        }
+        .price-card:hover {
+            border-color: #FF003C;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 0, 60, 0.1);
+        }
+        .price-card.popular {
+            border-color: #00F0FF;
+            background: linear-gradient(145deg, #111, #0a0a0a);
+        }
+        .price-card.popular:hover {
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+        }
+
+        /* --- RATING CARD --- */
+        .rating-box {
+            background: #111;
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .rating-box:hover {
+            border-color: #FF003C;
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
+        }
+        .stars {
+            color: #FFD700;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- NEON INPUTS --- */
+        .neon-input-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .neon-input {
+            width: 100%;
+            padding: 15px;
+            background: #0a0a0a;
+            border: 2px solid #333;
+            color: white;
+            font-family: 'Rajdhani', 'Cairo', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            outline: none;
+            transition: 0.3s;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%);
+        }
+
+        .neon-input:focus {
+            border-color: #00F0FF;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .neon-label {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            pointer-events: none;
+            color: #666;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+
+        .neon-input:focus ~ .neon-label,
+        .neon-input:valid ~ .neon-label {
+            top: -25px;
+            left: 0;
+            color: #00F0FF;
+            font-size: 0.8rem;
+            text-shadow: 0 0 5px #00F0FF;
+        }
+
+        /* --- LOGO FRAME --- */
+        .logo-frame {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid #FF003C;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            box-shadow: 0 0 15px rgba(255,0,60,0.5);
+        }
+        .logo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.1);
+        }
+
+        /* --- LANGUAGE DROPDOWN --- */
+        .lang-btn {
+            background: #111;
+            border: 1px solid #333;
+            color: #888;
+            transition: 0.3s;
+        }
+        .lang-btn:hover {
+            color: #00F0FF;
+            border-color: #00F0FF;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+        .lang-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            border: 1px solid #00F0FF;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+        .group:hover .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .clip-path-hex {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+        /* Drawn effect class for the hero image */
+        .hero-img-drawn {
+            filter: contrast(1.4) saturate(1.4) brightness(0.9) sepia(0.2);
+            mix-blend-mode: normal; 
+        }
+
+        /* --- SUCCESS MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-box {
+            background: #111;
+            border: 2px solid #00F0FF;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.3);
+            transform: scale(0.8);
+            transition: 0.3s;
+            max-width: 90%;
+            width: 400px;
+        }
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+    </style>
+</head>
+<body id="body" class="overflow-hidden"> <!-- Added overflow-hidden for loader -->
+
+    <!-- PRELOADER (New Addition) -->
+    <div id="preloader">
+        <div class="loader-ring"></div>
+        <div class="loader-text">LOADING...</div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-black text-3xl">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 class="text-2xl font-display text-white mb-2">Tssjel B'najah!</h3>
+            <p class="text-gray-400 mb-6 font-sans">Talab dyalkom tssjel, ghadi ntwslo m3kom f a9rab wa9t.</p>
+            <button onclick="closeModal()" class="bg-transparent border border-green-500 text-green-500 hover:bg-green-500 hover:text-black py-2 px-8 rounded uppercase font-bold transition">
+                Fermer
+            </button>
+        </div>
+    </div>
+
+    <!-- SOS BUTTON -->
+    <a href="tel:+212672174719" class="sos-btn fixed bottom-6 left-6 z-50 bg-neonRed text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(255,0,60,0.5)] hover:scale-110 transition-transform animate-pulse" title="Urgence">
+        <i class="fas fa-phone"></i>
+    </a>
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 bg-darkBg/90 backdrop-blur-md border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-24">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center gap-4 cursor-pointer group">
+                    <div class="logo-frame group-hover:scale-110 transition-transform duration-300">
+                        <!-- ORIGINAL LOGO PATH -->
+                        <img src="img/2a9b6f26-b9e3-4c99-8ad5-3e114226a70c.jpg" alt="Logo"> 
+                    </div>
+                    <div>
+                        <h1 class="font-display text-3xl tracking-wider text-white">
+                            FATIN <span class="text-neonRed">TKD</span>
+                        </h1>
+                        <span class="text-neonBlue font-bold tracking-[0.3em] text-sm block -mt-1 ml-1">OZ</span>
+                    </div>
+                </a>
+
+                <!-- Menu -->
+                <div class="hidden md:flex items-center space-x-10">
+                    <a href="#home" class="font-display text-gray-400 hover:text-neonBlue hover:text-glow transition text-lg uppercase" data-i18n="nav_home">Accueil</a>
+                    <a href="#masters" class="font-display text-gray-400 hover:text-neonRed hover:text-glow transition text-lg uppercase" data-i18n="nav_masters">Masters</a>
+                    <a href="#planning" class="font-display text-gray-400 hover:text-neonGold hover:text-glow transition text-lg uppercase" data-i18n="nav_planning">Planning</a>
+                    <a href="#team" class="font-display text-gray-400 hover:text-white hover:text-glow transition text-lg uppercase" data-i18n="nav_team">Champions</a>
+                    <a href="#join" class="btn-glitch text-sm py-2 px-6" data-i18n="nav_join">Rejoindre</a>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <!-- LANGUAGE SELECTOR -->
+                    <div class="relative group z-50">
+                        <button class="lang-btn w-10 h-10 rounded flex items-center justify-center text-lg">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <div class="lang-dropdown absolute right-0 mt-4 w-40 bg-[#0a0a0a] rounded overflow-hidden">
+                            <button onclick="changeLanguage('fr')" class="block w-full text-left px-4 py-3 text-white hover:bg-neonBlue hover:text-black transition font-bold border-b border-gray-800 flex justify-between items-center">
+                                <span>FR</span> <i class="fas fa-chevron-right text-xs"></i>
+                            </button>
+                            <button onclick="changeLanguage('en')" class="block w-full text-left px-4 py-3 text-white hover:bg-neonBlue hover:text-black transition font-bold border-b border-gray-800 flex justify-between items-center">
+                                <span>ENG</span> <i class="fas fa-chevron-right text-xs"></i>
+                            </button>
+                            <button onclick="changeLanguage('ar')" class="block w-full text-right px-4 py-3 text-white hover:bg-neonRed hover:text-black transition font-bold flex justify-between items-center flex-row-reverse">
+                                <span>عربي</span> <i class="fas fa-chevron-left text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:block">
+                        <a href="tel:+212672174719" class="btn-racing text-xs py-2 px-4 border border-neonRed text-neonRed hover:bg-neonRed hover:text-white transition rounded" data-i18n="nav_call">
+                            <i class="fas fa-phone-alt mr-2"></i> +212 672 174 719
+                        </a>
+                    </div>
+                </div>
+                
+                <button class="md:hidden text-white text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Image with "Drawn" Effect -->
+        <div class="absolute inset-0 z-0 bg-black">
+            <!-- ORIGINAL HERO IMAGE -->
+            <img src="img/WhatsApp Image 2025-12-07 at 1.54.37 PM.jpeg" class="w-full h-full object-cover opacity-60 hero-img-drawn" alt="Taekwondo Fight">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/60 to-transparent z-0"></div>
+        
+        <div class="relative z-10 text-center px-4" data-aos="zoom-in">
+            <h2 class="text-neonBlue font-bold tracking-[0.5em] text-xl mb-4 uppercase animate-pulse" data-i18n="hero_subtitle">L'Art du Combat</h2>
+            <h1 class="text-7xl md:text-9xl font-display text-white mb-6 leading-none" style="text-shadow: 4px 4px 0 #FF003C;">
+                FATIN <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonRed to-neonBlue">TKD</span>
+            </h1>
+            <p class="text-gray-300 text-xl md:text-2xl max-w-2xl mx-auto mb-12 font-sans" data-i18n="hero_desc">
+                Plus qu'un sport, un destin. Discipline d'élite à Oued Zem.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <a href="#join" class="btn-glitch" data-i18n="btn_start">Commencer</a>
+                <a href="#masters" class="btn-glitch" style="border-color: #00F0FF; color: #00F0FF;" data-i18n="btn_coaches">Les Maîtres</a>
+                
+                <!-- HISTOIRE BUTTON (Restored) -->
+                <a href="https://fatin-tkd-2.netlify.app/" target="_blank" class="btn-glitch gold" data-i18n="btn_history">
+                    HISTOIRE TKD
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- MASTERS SECTION (COACHES) -->
+    <section id="masters" class="py-24 bg-darkBg relative border-b border-gray-900">
+        <div class="max-w-6xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-6xl font-display text-white"><span data-i18n="coach_title">NOS</span> <span class="text-neonRed" data-i18n="coach_title_2">MAÎTRES</span></h2>
+                <p class="text-neonBlue tracking-widest uppercase" data-i18n="coach_subtitle">Choisissez votre Mentor</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Master 1: LKBIR -->
+                <div class="fighter-card group h-[500px]" data-aos="flip-right">
+                    <!-- ORIGINAL MASTER 1 IMAGE -->
+                    <img src="img/192d08ca-242d-484d-9b73-b2b025ee40c0.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="absolute top-4 right-4 bg-neonRed text-white font-display px-3 py-1 rounded skew-x-[-10deg]">HEAD COACH</div>
+                    <div class="fighter-stats">
+                        <h3 class="text-4xl font-display text-white mb-1">LKBIR ELYAQINI</h3>
+                        <p class="text-gray-400 mb-6 text-sm" data-i18n="coach_1_role">Grand Maître / Directeur Technique</p>
+                        <div class="mb-3">
+                            <div class="flex justify-between text-xs uppercase font-bold text-white mb-1"><span data-i18n="skill_tech">Technique (Poomsae)</span> <span>98%</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="--w: 98%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Master 2: AYOUB -->
+                <div class="fighter-card group h-[500px]" data-aos="flip-left">
+                    <!-- ORIGINAL MASTER 2 IMAGE -->
+                    <img src="img/3f29978b-9563-4634-bb24-22e090b267b7.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="absolute top-4 right-4 bg-neonBlue text-black font-display px-3 py-1 rounded skew-x-[-10deg]">FIGHT COACH</div>
+                    <div class="fighter-stats border-top-color: #FF003C">
+                        <h3 class="text-4xl font-display text-white mb-1">AYOUB ELYAQINI</h3>
+                        <p class="text-gray-400 mb-6 text-sm" data-i18n="coach_2_role">Entraîneur Combat / Kyorugi</p>
+                        <div class="mb-3">
+                            <div class="flex justify-between text-xs uppercase font-bold text-white mb-1"><span data-i18n="skill_fight">Combat (Sparring)</span> <span>95%</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="--w: 95%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: PLANNING & PRICING -->
+    <section id="planning" class="py-24 bg-[#080808] border-b border-gray-900 relative">
+        <div class="absolute right-0 top-0 w-1/2 h-full bg-neonRed/5 blur-[100px] pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-display text-white mb-2"><span class="text-white" data-i18n="plan_title">OFFRES</span> <span class="text-neonGold" data-i18n="plan_title_2">CLUB</span></h2>
+                <p class="text-gray-400" data-i18n="plan_subtitle">Choisissez la formule qui vous correspond</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- KIDS -->
+                <div class="price-card" data-aos="fade-up" data-aos-delay="0">
+                    <h3 class="text-2xl font-display text-white mb-2">KIDS</h3>
+                    <p class="text-neonBlue text-sm font-bold mb-6">4 - 12 ANS</p>
+                    <ul class="text-gray-400 space-y-3 mb-8 text-sm font-sans">
+                        <li><i class="fas fa-check text-neonRed mr-2"></i> 3 Séances / Semaine</li>
+                        <li><i class="fas fa-check text-neonRed mr-2"></i> Base Technique</li>
+                        <li><i class="fas fa-check text-neonRed mr-2"></i> Discipline & Respect</li>
+                    </ul>
+                    <a href="#join" class="block w-full text-center border border-gray-600 hover:border-white hover:bg-white hover:text-black text-white py-2 rounded transition font-bold" data-i18n="btn_select">CHOISIR</a>
+                </div>
+
+                <!-- ELITE (Featured) -->
+                <div class="price-card popular transform md:-translate-y-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute top-0 right-0 bg-neonBlue text-black text-xs font-bold px-3 py-1">POPULAIRE</div>
+                    <h3 class="text-3xl font-display text-white mb-2">ELITE</h3>
+                    <p class="text-neonRed text-sm font-bold mb-6">COMPÉTITION</p>
+                    <ul class="text-gray-300 space-y-3 mb-8 text-sm font-sans">
+                        <li><i class="fas fa-check text-neonBlue mr-2"></i> 3 Séances / Semaine</li>
+                        <li><i class="fas fa-check text-neonBlue mr-2"></i> Sparring & Poomsae</li>
+                        <li><i class="fas fa-check text-neonBlue mr-2"></i> Préparation Tournois</li>
+                        <li><i class="fas fa-check text-neonBlue mr-2"></i> Accès Musculation</li>
+                    </ul>
+                    <a href="#join" class="block w-full text-center bg-neonBlue text-black py-3 rounded transition font-bold hover:shadow-[0_0_20px_#00F0FF]" data-i18n="btn_select">CHOISIR</a>
+                </div>
+
+                <!-- ADULT -->
+                <div class="price-card" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-2xl font-display text-white mb-2">ADULTES</h3>
+                    <p class="text-neonBlue text-sm font-bold mb-6">LOISIR / FITNESS</p>
+                    <ul class="text-gray-400 space-y-3 mb-8 text-sm font-sans">
+                        <li><i class="fas fa-check text-neonRed mr-2"></i> 3 Séances / Semaine</li>
+                        <li><i class="fas fa-check text-neonRed mr-2"></i> Cardio & Self Defense</li>
+                        <li><i class="fas fa-check text-neonRed mr-2"></i> Renforcement</li>
+                    </ul>
+                    <a href="#join" class="block w-full text-center border border-gray-600 hover:border-white hover:bg-white hover:text-black text-white py-2 rounded transition font-bold" data-i18n="btn_select">CHOISIR</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHAMPIONS SECTION (PLAYERS) - RESTORED ORIGINAL 8 PLAYERS -->
+    <section id="team" class="py-24 bg-[#0a0a0a] relative">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[50%] bg-neonBlue/5 blur-[120px] rounded-full"></div>
+
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-6xl font-display text-white"><span data-i18n="team_title_1">NOS</span> <span class="text-neonRed" data-i18n="team_title_2">CHAMPIONS</span></h2>
+                <p class="text-neonBlue tracking-widest uppercase" data-i18n="team_subtitle">L'Élite de Oued Zem</p>
+            </div>
+
+            <!-- Players Grid (Restored 8 Champions with local images) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Player 1 -->
+                <div class="fighter-card group h-[400px]" data-aos="fade-up" data-aos-delay="0">
+                    <img src="img/ca417664-a282-4d5e-b85c-2a952c3faf4e.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="fighter-stats">
+                        <h3 class="text-2xl font-display text-white mb-1">ALAE ELASSAL</h3>
+                        <p class="text-gray-400 text-xs mb-3" data-i18n="role_fighter">Combattant</p>
+                        <div class="stat-bar"><div class="stat-fill" style="--w: 95%"></div></div>
+                    </div>
+                </div>
+                <!-- Player 2 -->
+                <div class="fighter-card group h-[400px]" data-aos="fade-up" data-aos-delay="100">
+                    <img src="wasim" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="fighter-stats border-top-color: #FF003C">
+                        <h3 class="text-2xl font-display text-white mb-1">WASSIM ASSAOUI</h3>
+                        <p class="text-gray-400 text-xs mb-3" data-i18n="role_fighter">Combattant</p>
+                        <div class="stat-bar"><div class="stat-fill" style="--w: 92%"></div></div>
+                    </div>
+                </div>
+                <!-- Player 3 -->
+                <div class="fighter-card group h-[400px]" data-aos="fade-up" data-aos-delay="200">
+                    <img src="img/34c117c8-5e4f-4297-aaed-edb0b921bab5.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="fighter-stats">
+                        <h3 class="text-2xl font-display text-white mb-1">AMINE ASSAOUI</h3>
+                        <p class="text-gray-400 text-xs mb-3" data-i18n="role_fighter">Combattant</p>
+                        <div class="stat-bar"><div class="stat-fill" style="--w: 90%"></div></div>
+                    </div>
+                </div>
+                <!-- Player 4 -->
+                <div class="fighter-card group h-[400px]" data-aos="fade-up" data-aos-delay="300">
+                    <img src="img/ebda718e-d234-4d01-a0ba-d4b94f266078.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="fighter-stats border-top-color: #FF003C">
+                        <h3 class="text-2xl font-display text-white mb-1">M.A AIT-ELMOUDEN</h3>
+                        <p class="text-gray-400 text-xs mb-3" data-i18n="role_fighter">Combattant</p>
+                        <div class="stat-bar"><div class="stat-fill" style="--w: 88%"></div></div>
+                    </div>
+                </div>
+                <!-- Player 5 -->
+                <div class="fighter-card group h-[400px]" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://via.placeholder.com/400x600/111/FF003C?text=ELWARGHI" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500">
+                    <div class="fighter-stats">
+                        <h3 class="text-2xl font-display text-white mb-1">M.A EL OUARGHI</h3>
+                        <p class="text-gray-400 text-xs mb-3" data-i18n="role_fighter">Combattant</p>
+                        <div class="stat-bar"><div class="stat-fill" style="--w: 89%"></div></div>
+                    </div>
+                </div>
+                <!-- Player 6 -->
+                <div class="fighter-card group h-[400px]" data-aos="fade-up" data-aos-delay="500">
+                    <img src="img/ayoub.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="fighter-stats border-top-color: #FF003C">
+                        <h3 class="text-2xl font-display text-white mb-1">AYOUB ELYAQINI</h3>
+                        <p class="text-gray-400 text-xs mb-3" data-i18n="role_coach_champ">Coach / Champion</p>
+                        <div class="stat-bar"><div class="stat-fill" style="--w: 97%"></div></div>
+                    </div>
+                </div>
+                <!-- Player 7 -->
+                <div class="fighter-card group h-[400px]" data-aos="fade-up" data-aos-delay="600">
+                    <img src="img/BRAHIM.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="fighter-stats">
+                        <h3 class="text-2xl font-display text-white mb-1">BRAHIM RAJI</h3>
+                        <p class="text-gray-400 text-xs mb-3" data-i18n="role_fighter">Combattant</p>
+                        <div class="stat-bar"><div class="stat-fill" style="--w: 85%"></div></div>
+                    </div>
+                </div>
+                <!-- Player 8 -->
+                <div class="fighter-card group h-[400px]" data-aos="fade-up" data-aos-delay="700">
+                    <img src="img/ABDO.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
+                    <div class="fighter-stats border-top-color: #FF003C">
+                        <h3 class="text-2xl font-display text-white mb-1">ABDSAMAD ELASSAL</h3>
+                        <p class="text-gray-400 text-xs mb-3" data-i18n="role_fighter">Combattant</p>
+                        <div class="stat-bar"><div class="stat-fill" style="--w: 86%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- T9YIMAT (RATINGS SCOREBOARD) -->
+    <section id="ratings" class="py-20 bg-[#080808] border-y border-gray-900">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-display text-center mb-16"><span data-i18n="rev_title">AVIS</span> <span class="text-neonBlue">CLUB</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Global Rating -->
+                <div class="rating-box" data-aos="zoom-in">
+                    <h3 class="text-xl text-gray-400 uppercase tracking-widest mb-2" data-i18n="rate_global">Note Globale</h3>
+                    <div class="text-6xl font-display text-white mb-2">4.9<span class="text-2xl text-gray-500">/5</span></div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-500 text-sm" data-i18n="rate_based_on">Basé sur 120 avis</p>
+                </div>
+
+                <!-- Training Quality -->
+                <div class="rating-box" data-aos="zoom-in" data-aos-delay="100">
+                    <h3 class="text-xl text-gray-400 uppercase tracking-widest mb-4" data-i18n="rate_quality">Qualité Entraînement</h3>
+                    <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden mb-2">
+                        <div class="bg-neonRed h-full" style="width: 98%"></div>
+                    </div>
+                    <div class="flex justify-between text-white font-display">
+                        <span data-i18n="rate_tech_label">Technique</span>
+                        <span>98%</span>
+                    </div>
+                </div>
+
+                <!-- Atmosphere -->
+                <div class="rating-box" data-aos="zoom-in" data-aos-delay="200">
+                    <h3 class="text-xl text-gray-400 uppercase tracking-widest mb-4" data-i18n="rate_atmos">Ambiance Club</h3>
+                    <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden mb-2">
+                        <div class="bg-neonBlue h-full" style="width: 95%"></div>
+                    </div>
+                    <div class="flex justify-between text-white font-display">
+                        <span data-i18n="rate_disc_label">Discipline</span>
+                        <span>95%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JOIN US (FORM) -->
+    <section id="join" class="py-24 bg-darkBg relative">
+        <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-neonRed to-neonBlue"></div>
+
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="bg-panelBg p-10 border border-gray-800 relative overflow-hidden" data-aos="fade-up">
+                <div class="absolute -right-20 -top-20 text-[200px] text-white opacity-[0.03] font-display select-none">JOIN</div>
+
+                <h2 class="text-5xl font-display text-white mb-2 text-center" data-i18n="join_title">PRÊT À <span class="text-neonBlue">COMBATTRE ?</span></h2>
+                <p class="text-center text-gray-500 mb-12" data-i18n="join_subtitle">Remplissez ce formulaire pour votre première séance.</p>
+
+                <form class="space-y-6 relative z-10" id="joinForm" onsubmit="event.preventDefault(); submitForm();">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="neon-input-group">
+                            <input type="text" class="neon-input" required>
+                            <label class="neon-label" data-i18n="form_fname">Prénom</label>
+                        </div>
+                        <div class="neon-input-group">
+                            <input type="text" class="neon-input" required>
+                            <label class="neon-label" data-i18n="form_lname">Nom</label>
+                        </div>
+                    </div>
+
+                    <div class="neon-input-group">
+                        <input type="tel" class="neon-input" required>
+                        <label class="neon-label" data-i18n="form_phone">Tél (WhatsApp)</label>
+                    </div>
+
+                    <div class="neon-input-group">
+                        <select class="neon-input text-gray-400">
+                            <option data-i18n="prog_select">Sélectionnez un Programme</option>
+                            <option data-i18n="prog_kids">Kids (4-12 ans)</option>
+                            <option data-i18n="prog_elite">Elite Competition</option>
+                            <option data-i18n="prog_adult">Adultes / Fitness</option>
+                        </select>
+                        <label class="neon-label" style="color: #00F0FF; top: -25px; left: 0; font-size: 0.8rem;" data-i18n="form_program">Programme</label>
+                    </div>
+
+                    <div class="text-center pt-4">
+                        <button type="submit" class="btn-glitch w-full md:w-auto" data-i18n="form_btn">
+                            VALIDER L'INSCRIPTION
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: LOCALISATION (MAP) -->
+    <section id="location" class="py-24 bg-[#0a0a0a] border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl font-display text-white mb-2"><span class="text-neonRed" data-i18n="loc_title">LOCALISATION</span></h2>
+                <p class="text-gray-500 font-sans">20 تجزئة برحيل شارع محمد الخمس وادي زم</p>
+            </div>
+            
+            <div class="w-full h-96 rounded-xl overflow-hidden border-2 border-[#222] shadow-[0_0_30px_rgba(255,0,60,0.1)]">
+                <!-- Google Maps Embed with Specific Address Marker -->
+                <iframe 
+                    src="https://maps.google.com/maps?q=20%20Lotissement%20Barhil%2C%20Boulevard%20Mohammed%20V%2C%20Oued%20Zem&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0; filter: grayscale(100%) invert(92%) contrast(83%);" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black pt-16 pb-8 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            
+            <h2 class="font-display text-4xl text-white mb-1">FATIN <span class="text-neonRed">TKD</span></h2>
+            <p class="text-neonBlue text-sm tracking-[0.5em] font-bold mb-4 uppercase" data-i18n="footer_city">Oued-Zem</p>
+            
+            <p class="text-gray-500 text-xs mb-8 font-sans">20 Lotissement Barhil, Boulevard Mohammed V, Oued Zem</p>
+
+            <div class="flex justify-center gap-8 mb-12">
+                <a href="https://www.facebook.com/share/1CsvxKgyzK/" target="_blank" class="w-14 h-14 bg-[#111] flex items-center justify-center clip-path-hex hover:bg-[#3b5998] transition text-gray-400 hover:text-white">
+                    <i class="fab fa-facebook-f text-2xl"></i>
+                </a>
+                <a href="https://wa.me/212672174719" target="_blank" class="w-14 h-14 bg-[#111] flex items-center justify-center clip-path-hex hover:bg-[#25D366] transition text-gray-400 hover:text-white">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                </a>
+                <a href="tel:+212672174719" class="w-14 h-14 bg-[#111] flex items-center justify-center clip-path-hex hover:bg-neonRed transition text-gray-400 hover:text-white">
+                    <i class="fas fa-phone text-2xl"></i>
+                </a>
+            </div>
+
+            <div class="border-t border-gray-900 pt-8 text-xs text-gray-600 flex flex-col md:flex-row justify-between items-center">
+                <p data-i18n="footer_copy">Copyright © 2024 FATIN TKD.</p>
+                <p class="uppercase tracking-widest mt-2 md:mt-0">
+                    <span data-i18n="footer_dev">Développeur :</span> <span class="text-neonBlue font-bold">Alae Elassal</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- PRELOADER LOGIC ---
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            const body = document.getElementById('body');
+            
+            // Duration set to 10 seconds (10000ms) as requested
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                body.classList.remove('overflow-hidden');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    // Trigger AOS after loader is gone for better effect
+                    AOS.refresh(); 
+                }, 250);
+            }, 5000); 
+        });
+
+        // Init Animation
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // MODAL LOGIC
+        function submitForm() {
+            const modal = document.getElementById('successModal');
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.remove('active');
+        }
+
+        // TRANSLATIONS
+        const resources = {
+            fr: {
+                nav_home: "Accueil", nav_masters: "Les Maîtres", nav_team: "Champions", nav_join: "Rejoindre", nav_reviews: "Avis", nav_planning: "Tarifs",
+                hero_subtitle: "L'Art du Combat", hero_desc: "Plus qu'un sport, un destin. Discipline d'élite à Oued Zem.", btn_start: "Commencer", btn_planning: "Horaires", btn_history: "Histoire TKD",
+                coach_title: "NOS", coach_title_2: "MAÎTRES", coach_subtitle: "Choisissez votre Mentor",
+                coach_1_role: "Grand Maître / Directeur Technique", coach_2_role: "Entraîneur Combat / Kyorugi",
+                skill_tech: "Technique (Poomsae)", skill_fight: "Combat (Sparring)",
+                plan_title: "OFFRES", plan_title_2: "CLUB", plan_subtitle: "Choisissez la formule qui vous correspond", btn_select: "CHOISIR",
+                team_title_1: "NOS", team_title_2: "CHAMPIONS", team_subtitle: "L'Élite de Oued Zem",
+                role_fighter: "Combattant",
+                rev_title: "AVIS", rate_global: "Note Globale", rate_quality: "Qualité Entraînement", rate_atmos: "Ambiance Club",
+                rate_based_on: "Basé sur 120 avis", rate_tech_label: "Technique", rate_disc_label: "Discipline",
+                join_title: "PRÊT À <span class='text-neonBlue'>COMBATTRE ?</span>", join_subtitle: "Remplissez ce formulaire pour votre première séance.",
+                form_fname: "Prénom", form_lname: "Nom", form_phone: "Tél (WhatsApp)", form_program: "Programme", form_btn: "VALIDER L'INSCRIPTION",
+                prog_select: "Sélectionnez un Programme", prog_kids: "Kids (4-12 ans)", prog_elite: "Elite Competition", prog_adult: "Adultes / Fitness",
+                loc_title: "LOCALISATION",
+                footer_city: "Oued-Zem", footer_copy: "Copyright © 2024 FATIN TKD.", footer_dev: "Développeur :"
+            },
+            en: {
+                nav_home: "Home", nav_masters: "Masters", nav_team: "Champions", nav_join: "Join", nav_reviews: "Reviews", nav_planning: "Pricing",
+                hero_subtitle: "Art of Combat", hero_desc: "More than a sport, a destiny. Elite discipline in Oued Zem.", btn_start: "Start Now", btn_planning: "Schedule",
+                coach_title: "OUR", coach_title_2: "MASTERS", coach_subtitle: "Choose your Mentor",
+                coach_1_role: "Grand Master / Technical Director", coach_2_role: "Fight Coach / Kyorugi",
+                skill_tech: "Technique (Poomsae)", skill_fight: "Fight (Sparring)",
+                plan_title: "CLUB", plan_title_2: "PRICING", plan_subtitle: "Choose the plan that suits you", btn_select: "SELECT",
+                team_title_1: "OUR", team_title_2: "CHAMPIONS", team_subtitle: "Oued Zem's Elite",
+                role_fighter: "Fighter",
+                rev_title: "REVIEWS", rate_global: "Global Rating", rate_quality: "Training Quality", rate_atmos: "Atmosphere",
+                rate_based_on: "Based on 120 reviews", rate_tech_label: "Technique", rate_disc_label: "Discipline",
+                join_title: "READY TO <span class='text-neonBlue'>FIGHT?</span>", join_subtitle: "Fill this form for your first session.",
+                form_fname: "First Name", form_lname: "Last Name", form_phone: "Phone (WhatsApp)", form_program: "Program", form_btn: "CONFIRM REGISTRATION",
+                prog_select: "Select a Program", prog_kids: "Kids (4-12 yrs)", prog_elite: "Elite Competition", prog_adult: "Adults / Fitness",
+                loc_title: "LOCATION",
+                footer_city: "Oued-Zem", footer_copy: "Copyright © 2024 FATIN TKD.", footer_dev: "Developer :"
+            },
+            ar: {
+                nav_home: "الرئيسية", nav_masters: "الأساتذة", nav_team: "الأبطال", nav_join: "انضم إلينا", nav_reviews: "آراء", nav_planning: "الأثمنة",
+                hero_subtitle: "فن القتال", hero_desc: "أكثر من مجرد رياضة، إنه مصير. انضباط النخبة في واد زم.", btn_start: "ابدأ الآن", btn_planning: "التوقيت",
+                coach_title: "أساتذتنا", coach_title_2: "", coach_subtitle: "اختر معلمك",
+                coach_1_role: "المدير التقني / ماستر كبير", coach_2_role: "مدرب القتال / كيروجي",
+                skill_tech: "التقنية (بومسي)", skill_fight: "القتال (المبارزة)",
+                plan_title: "عروض", plan_title_2: "النادي", plan_subtitle: "اختر الصيغة التي تناسبك", btn_select: "اختيار",
+                team_title_1: "أبطالنا", team_title_2: "", team_subtitle: "نخبة واد زم",
+                role_fighter: "مقاتل",
+                rev_title: "آراء", rate_global: "التقييم العام", rate_quality: "جودة التدريب", rate_atmos: "أجواء النادي",
+                rate_based_on: "بناءً على 120 رأي", rate_tech_label: "التقنية", rate_disc_label: "الانضباط",
+                join_title: "مستعد <span class='text-neonBlue'>للقتال؟</span>", join_subtitle: "املأ الاستمارة لحصتك الأولى.",
+                form_fname: "الاسم الأول", form_lname: "الاسم العائلي", form_phone: "الهاتف (واتساب)", form_program: "البرنامج", form_btn: "تأكيد التسجيل",
+                prog_select: "اختر برنامجاً", prog_kids: "أطفال (4-12 سنة)", prog_elite: "نخبة المنافسة", prog_adult: "كبار / لياقة",
+                loc_title: "الموقع",
+                footer_city: "واد زم", footer_copy: "حقوق النشر © 2024 FATIN TKD.", footer_dev: "المطور :"
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (resources[lang] && resources[lang][key]) {
+                    element.innerHTML = resources[lang][key]; 
+                }
+            });
+
+            const body = document.getElementById('body');
+            
+            if (lang === 'ar') {
+                body.setAttribute('dir', 'rtl');
+                body.style.fontFamily = "'Cairo', sans-serif";
+            } else {
+                body.setAttribute('dir', 'ltr');
+                body.style.fontFamily = "'Rajdhani', sans-serif";
+            }
+        }
+    </script>
+</body>
+</html>
