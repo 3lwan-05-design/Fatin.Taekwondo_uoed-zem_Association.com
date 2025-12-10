@@ -12,10 +12,10 @@
 
     <!-- --- SOCIAL MEDIA TAGS (WhatsApp / Facebook) --- -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://3lwan-05-design.github.io/Fatin.Taekwondo_uoed-zem.com/"> <!-- Ila kan lien mkhtalf bdlo hna -->
+    <meta property="og:url" content="https://3lwan-05-design.github.io/Fatin.Taekwondo_uoed-zem.com/">
     <meta property="og:title" content="FATIN TKD OZ - L'Art du Combat">
     <meta property="og:description" content="Rejoignez l'élite du Taekwondo à Oued Zem. Plus qu'un sport, un destin.">
-    <meta property="og:image" content="img/2a9b6f26-b9e3-4c99-8ad5-3e114226a70c.jpg"> <!-- Tswira li ghatban f partage -->
+    <meta property="og:image" content="img/2a9b6f26-b9e3-4c99-8ad5-3e114226a70c.jpg">
 
     <!-- Icon -->
     <link rel="icon" href="icon/2a9b6f26-b9e3-4c99-8ad5-3e114226a70c.jpg">
@@ -136,6 +136,14 @@
             justify-content: center;
             text-align: center;
         }
+        /* Mobile adjustment for buttons */
+        @media (max-width: 768px) {
+            .btn-glitch {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
 
         .btn-glitch:hover {
             background: #FF003C;
@@ -144,7 +152,6 @@
             text-shadow: none;
         }
         
-        /* Gold Button Variation */
         .btn-glitch.gold {
             border-color: #FFD700;
             color: #FFD700;
@@ -382,11 +389,20 @@
             transform: scale(1);
         }
 
+        /* --- MOBILE MENU STYLES (New) --- */
+        #mobile-menu-overlay {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            transform: translateX(0);
+        }
+
     </style>
 </head>
 <body id="body" class="overflow-hidden"> <!-- Added overflow-hidden for loader -->
 
-    <!-- PRELOADER (New Addition) -->
+    <!-- PRELOADER -->
     <div id="preloader">
         <div class="loader-ring"></div>
         <div class="loader-text">LOADING...</div>
@@ -422,14 +438,14 @@
                         <img src="img/2a9b6f26-b9e3-4c99-8ad5-3e114226a70c.jpg" alt="Logo"> 
                     </div>
                     <div>
-                        <h1 class="font-display text-3xl tracking-wider text-white">
+                        <h1 class="font-display text-2xl md:text-3xl tracking-wider text-white">
                             FATIN <span class="text-neonRed">TKD</span>
                         </h1>
-                        <span class="text-neonBlue font-bold tracking-[0.3em] text-sm block -mt-1 ml-1">OZ</span>
+                        <span class="text-neonBlue font-bold tracking-[0.3em] text-xs md:text-sm block -mt-1 ml-1">OZ</span>
                     </div>
                 </a>
 
-                <!-- Menu -->
+                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-10">
                     <a href="#home" class="font-display text-gray-400 hover:text-neonBlue hover:text-glow transition text-lg uppercase" data-i18n="nav_home">Accueil</a>
                     <a href="#masters" class="font-display text-gray-400 hover:text-neonRed hover:text-glow transition text-lg uppercase" data-i18n="nav_masters">Masters</a>
@@ -464,12 +480,30 @@
                     </div>
                 </div>
                 
-                <button class="md:hidden text-white text-2xl">
+                <!-- MOBILE MENU BUTTON (Trigger) -->
+                <button id="menu-btn" class="md:hidden text-white text-2xl">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
     </nav>
+
+    <!-- MOBILE MENU OVERLAY (Added for responsiveness) -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 z-[60] bg-black/95 backdrop-blur-xl flex flex-col justify-center items-center md:hidden">
+        <button id="close-menu" class="absolute top-6 right-6 text-white text-4xl">&times;</button>
+        <div class="flex flex-col gap-8 text-center text-2xl font-display">
+            <a href="#home" class="mobile-link text-white hover:text-neonBlue" data-i18n="nav_home">Accueil</a>
+            <a href="#masters" class="mobile-link text-white hover:text-neonRed" data-i18n="nav_masters">Masters</a>
+            <a href="#planning" class="mobile-link text-white hover:text-neonGold" data-i18n="nav_planning">Planning</a>
+            <a href="#team" class="mobile-link text-white" data-i18n="nav_team">Champions</a>
+            <a href="#join" class="mobile-link text-neonRed" data-i18n="nav_join">Rejoindre</a>
+        </div>
+        <div class="mt-8">
+             <a href="tel:+212672174719" class="text-white border border-neonRed px-4 py-2 rounded">
+                <i class="fas fa-phone-alt mr-2"></i> +212 672 174 719
+            </a>
+        </div>
+    </div>
 
     <!-- HERO SECTION -->
     <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
@@ -481,14 +515,14 @@
         <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/60 to-transparent z-0"></div>
         
         <div class="relative z-10 text-center px-4" data-aos="zoom-in">
-            <h2 class="text-neonBlue font-bold tracking-[0.5em] text-xl mb-4 uppercase animate-pulse" data-i18n="hero_subtitle">L'Art du Combat</h2>
-            <h1 class="text-7xl md:text-9xl font-display text-white mb-6 leading-none" style="text-shadow: 4px 4px 0 #FF003C;">
+            <h2 class="text-neonBlue font-bold tracking-[0.5em] text-sm md:text-xl mb-4 uppercase animate-pulse" data-i18n="hero_subtitle">L'Art du Combat</h2>
+            <h1 class="text-5xl md:text-7xl lg:text-9xl font-display text-white mb-6 leading-none" style="text-shadow: 4px 4px 0 #FF003C;">
                 FATIN <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonRed to-neonBlue">TKD</span>
             </h1>
-            <p class="text-gray-300 text-xl md:text-2xl max-w-2xl mx-auto mb-12 font-sans" data-i18n="hero_desc">
+            <p class="text-gray-300 text-lg md:text-xl lg:text-2xl max-w-2xl mx-auto mb-12 font-sans" data-i18n="hero_desc">
                 Plus qu'un sport, un destin. Discipline d'élite à Oued Zem.
             </p>
-            <div class="flex flex-col md:flex-row justify-center gap-6">
+            <div class="flex flex-col md:flex-row justify-center gap-4 md:gap-6">
                 <a href="#join" class="btn-glitch" data-i18n="btn_start">Commencer</a>
                 <a href="#masters" class="btn-glitch" style="border-color: #00F0FF; color: #00F0FF;" data-i18n="btn_coaches">Les Maîtres</a>
                 
@@ -501,21 +535,21 @@
     </section>
 
     <!-- MASTERS SECTION (COACHES) -->
-    <section id="masters" class="py-24 bg-darkBg relative border-b border-gray-900">
+    <section id="masters" class="py-16 md:py-24 bg-darkBg relative border-b border-gray-900">
         <div class="max-w-6xl mx-auto px-4 relative z-10">
-            <div class="text-center mb-20">
-                <h2 class="text-6xl font-display text-white"><span data-i18n="coach_title">NOS</span> <span class="text-neonRed" data-i18n="coach_title_2">MAÎTRES</span></h2>
+            <div class="text-center mb-12 md:mb-20">
+                <h2 class="text-4xl md:text-6xl font-display text-white"><span data-i18n="coach_title">NOS</span> <span class="text-neonRed" data-i18n="coach_title_2">MAÎTRES</span></h2>
                 <p class="text-neonBlue tracking-widest uppercase" data-i18n="coach_subtitle">Choisissez votre Mentor</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                 <!-- Master 1: LKBIR -->
                 <div class="fighter-card group h-[500px]" data-aos="flip-right">
                     <!-- ORIGINAL MASTER 1 IMAGE -->
                     <img src="img/192d08ca-242d-484d-9b73-b2b025ee40c0.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
                     <div class="absolute top-4 right-4 bg-neonRed text-white font-display px-3 py-1 rounded skew-x-[-10deg]">HEAD COACH</div>
                     <div class="fighter-stats">
-                        <h3 class="text-4xl font-display text-white mb-1">LKBIR ELYAQINI</h3>
+                        <h3 class="text-3xl md:text-4xl font-display text-white mb-1">LKBIR ELYAQINI</h3>
                         <p class="text-gray-400 mb-6 text-sm" data-i18n="coach_1_role">Grand Maître / Directeur Technique</p>
                         <div class="mb-3">
                             <div class="flex justify-between text-xs uppercase font-bold text-white mb-1"><span data-i18n="skill_tech">Technique (Poomsae)</span> <span>98%</span></div>
@@ -530,7 +564,7 @@
                     <img src="img/3f29978b-9563-4634-bb24-22e090b267b7.jpg" class="w-full h-full object-cover :grayscale-0 transition duration-500">
                     <div class="absolute top-4 right-4 bg-neonBlue text-black font-display px-3 py-1 rounded skew-x-[-10deg]">FIGHT COACH</div>
                     <div class="fighter-stats border-top-color: #FF003C">
-                        <h3 class="text-4xl font-display text-white mb-1">AYOUB ELYAQINI</h3>
+                        <h3 class="text-3xl md:text-4xl font-display text-white mb-1">AYOUB ELYAQINI</h3>
                         <p class="text-gray-400 mb-6 text-sm" data-i18n="coach_2_role">Entraîneur Combat / Kyorugi</p>
                         <div class="mb-3">
                             <div class="flex justify-between text-xs uppercase font-bold text-white mb-1"><span data-i18n="skill_fight">Combat (Sparring)</span> <span>95%</span></div>
@@ -543,11 +577,11 @@
     </section>
 
     <!-- NEW SECTION: PLANNING & PRICING -->
-    <section id="planning" class="py-24 bg-[#080808] border-b border-gray-900 relative">
+    <section id="planning" class="py-16 md:py-24 bg-[#080808] border-b border-gray-900 relative">
         <div class="absolute right-0 top-0 w-1/2 h-full bg-neonRed/5 blur-[100px] pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-4 relative z-10">
             <div class="text-center mb-16">
-                <h2 class="text-5xl font-display text-white mb-2"><span class="text-white" data-i18n="plan_title">OFFRES</span> <span class="text-neonGold" data-i18n="plan_title_2">CLUB</span></h2>
+                <h2 class="text-4xl md:text-5xl font-display text-white mb-2"><span class="text-white" data-i18n="plan_title">OFFRES</span> <span class="text-neonGold" data-i18n="plan_title_2">CLUB</span></h2>
                 <p class="text-gray-400" data-i18n="plan_subtitle">Choisissez la formule qui vous correspond</p>
             </div>
 
@@ -594,12 +628,12 @@
     </section>
 
     <!-- CHAMPIONS SECTION (PLAYERS) - RESTORED ORIGINAL 8 PLAYERS -->
-    <section id="team" class="py-24 bg-[#0a0a0a] relative">
+    <section id="team" class="py-16 md:py-24 bg-[#0a0a0a] relative">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[50%] bg-neonBlue/5 blur-[120px] rounded-full"></div>
 
         <div class="max-w-7xl mx-auto px-4 relative z-10">
             <div class="text-center mb-20">
-                <h2 class="text-6xl font-display text-white"><span data-i18n="team_title_1">NOS</span> <span class="text-neonRed" data-i18n="team_title_2">CHAMPIONS</span></h2>
+                <h2 class="text-4xl md:text-6xl font-display text-white"><span data-i18n="team_title_1">NOS</span> <span class="text-neonRed" data-i18n="team_title_2">CHAMPIONS</span></h2>
                 <p class="text-neonBlue tracking-widest uppercase" data-i18n="team_subtitle">L'Élite de Oued Zem</p>
             </div>
 
@@ -682,9 +716,9 @@
     </section>
 
     <!-- T9YIMAT (RATINGS SCOREBOARD) -->
-    <section id="ratings" class="py-20 bg-[#080808] border-y border-gray-900">
+    <section id="ratings" class="py-16 md:py-20 bg-[#080808] border-y border-gray-900">
         <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-4xl font-display text-center mb-16"><span data-i18n="rev_title">AVIS</span> <span class="text-neonBlue">CLUB</span></h2>
+            <h2 class="text-3xl md:text-4xl font-display text-center mb-16"><span data-i18n="rev_title">AVIS</span> <span class="text-neonBlue">CLUB</span></h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Global Rating -->
@@ -725,14 +759,14 @@
     </section>
 
     <!-- JOIN US (FORM) -->
-    <section id="join" class="py-24 bg-darkBg relative">
+    <section id="join" class="py-16 md:py-24 bg-darkBg relative">
         <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-neonRed to-neonBlue"></div>
 
         <div class="max-w-4xl mx-auto px-4">
-            <div class="bg-panelBg p-10 border border-gray-800 relative overflow-hidden" data-aos="fade-up">
-                <div class="absolute -right-20 -top-20 text-[200px] text-white opacity-[0.03] font-display select-none">JOIN</div>
+            <div class="bg-panelBg p-6 md:p-10 border border-gray-800 relative overflow-hidden" data-aos="fade-up">
+                <div class="absolute -right-20 -top-20 text-[100px] md:text-[200px] text-white opacity-[0.03] font-display select-none">JOIN</div>
 
-                <h2 class="text-5xl font-display text-white mb-2 text-center" data-i18n="join_title">PRÊT À <span class="text-neonBlue">COMBATTRE ?</span></h2>
+                <h2 class="text-3xl md:text-5xl font-display text-white mb-2 text-center" data-i18n="join_title">PRÊT À <span class="text-neonBlue">COMBATTRE ?</span></h2>
                 <p class="text-center text-gray-500 mb-12" data-i18n="join_subtitle">Remplissez ce formulaire pour votre première séance.</p>
 
                 <form class="space-y-6 relative z-10" id="joinForm" onsubmit="event.preventDefault(); submitForm();">
@@ -773,14 +807,14 @@
     </section>
 
     <!-- NEW SECTION: LOCALISATION (MAP) -->
-    <section id="location" class="py-24 bg-[#0a0a0a] border-t border-gray-900">
+    <section id="location" class="py-16 md:py-24 bg-[#0a0a0a] border-t border-gray-900">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-12">
-                <h2 class="text-5xl font-display text-white mb-2"><span class="text-neonRed" data-i18n="loc_title">LOCALISATION</span></h2>
+                <h2 class="text-4xl md:text-5xl font-display text-white mb-2"><span class="text-neonRed" data-i18n="loc_title">LOCALISATION</span></h2>
                 <p class="text-gray-500 font-sans">20 تجزئة برحيل شارع محمد الخمس وادي زم</p>
             </div>
             
-            <div class="w-full h-96 rounded-xl overflow-hidden border-2 border-[#222] shadow-[0_0_30px_rgba(255,0,60,0.1)]">
+            <div class="w-full h-64 md:h-96 rounded-xl overflow-hidden border-2 border-[#222] shadow-[0_0_30px_rgba(255,0,60,0.1)]">
                 <!-- Google Maps Embed with Specific Address Marker -->
                 <iframe 
                     src="https://maps.google.com/maps?q=20%20Lotissement%20Barhil%2C%20Boulevard%20Mohammed%20V%2C%20Oued%20Zem&t=&z=15&ie=UTF8&iwloc=&output=embed" 
@@ -860,6 +894,24 @@
             const modal = document.getElementById('successModal');
             modal.classList.remove('active');
         }
+
+        // --- MOBILE MENU LOGIC (Added) ---
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu-overlay');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('open');
+            document.body.classList.toggle('overflow-hidden'); 
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
 
         // TRANSLATIONS
         const resources = {
